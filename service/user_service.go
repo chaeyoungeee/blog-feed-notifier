@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/chaeyoungeee/blog-feed-notifier/domain"
@@ -32,4 +33,20 @@ func (s *UserService) CreateUser(user *domain.User) error {
 	}
 
 	return s.Repo.Create(user)
+}
+
+func (s *UserService) Login(username, password string) (*domain.User, error) {
+	user, err := s.Repo.GetByUsername(username)
+	if err != nil {
+		if errors.Is(err, repository.ErrUserNotFound) {
+			return nil, errors.New("유저 이름 혹은 비밀번호가 일치하지 않습니다")
+		}
+		return nil, err
+	}
+
+	if user.Password != password {
+		return nil, errors.New("유저 이름 혹은 비밀번호가 일치하지 않습니다")
+	}
+
+	return user, nil
 }

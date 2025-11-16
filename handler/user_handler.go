@@ -19,18 +19,32 @@ func NewUserHandler(s *service.UserService) *UserHandler {
 func (h *UserHandler) CreateUser(c *gin.Context) {
 	var user domain.User
 
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "잘못된 요청입니다",
-		})
+	if !BindJson(c, &user) {
 		return
 	}
 
 	if err := h.Service.CreateUser(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.Status(http.StatusCreated)
+}
+
+func (h *UserHandler) Login(c *gin.Context) {
+	var req struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+
+	if !BindJson(c, &req) {
+		return
+	}
+
+	user, err := h.Service.Login(req.Username, req.Password)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"id": user.ID, "username": user.Username})
 }
