@@ -1,0 +1,33 @@
+package repository
+
+import (
+	"gorm.io/gorm"
+
+	"github.com/chaeyoungeee/blog-feed-notifier/domain"
+)
+
+var ErrSubscriptionNotFound = gorm.ErrRecordNotFound
+
+type SubscriptionRepo struct {
+	DB *gorm.DB
+}
+
+func NewSubscriptionRepo(db *gorm.DB) *SubscriptionRepo {
+	return &SubscriptionRepo{DB: db}
+}
+
+func (r *SubscriptionRepo) Create(subscription *domain.Subscription) error {
+	return r.DB.Create(subscription).Error
+}
+
+func (r *SubscriptionRepo) GetAllByUserID(userID uint) ([]*domain.Subscription, error) {
+	var subscriptions []*domain.Subscription
+	err := r.DB.
+		Preload("Blog").
+		Where("user_id = ?", userID).
+		Find(&subscriptions).Error
+	if err != nil {
+		return nil, err
+	}
+	return subscriptions, nil
+}

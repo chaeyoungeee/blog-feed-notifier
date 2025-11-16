@@ -20,11 +20,16 @@ func NewRouter(db *gorm.DB) *gin.Engine {
 	blogService := service.NewBlogService(blogRepo)
 	blogHandler := handler.NewBlogHandler(blogService)
 
+	subscriptionRepo := repository.NewSubscriptionRepo(db)
+	subscriptionService := service.NewSubscriptionService(subscriptionRepo)
+	subscriptionHandler := handler.NewSubscriptionHandler(subscriptionService)
+
 	api := router.Group("/api/v1")
 	{
 		api.POST("/users", userHandler.CreateUser)
 		api.POST("/auth/login", userHandler.Login)
 		api.GET("/blogs", blogHandler.GetBlogs)
+		api.GET("/users/:user_id/subscriptions", subscriptionHandler.GetUserSubscriptions)
 	}
 
 	return router
