@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/chaeyoungeee/blog-feed-notifier/domain"
+	"github.com/chaeyoungeee/blog-feed-notifier/dto"
 	"github.com/chaeyoungeee/blog-feed-notifier/service"
 	"github.com/gin-gonic/gin"
 )
@@ -17,13 +18,18 @@ func NewUserHandler(s *service.UserService) *UserHandler {
 }
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
-	var user domain.User
+	var req dto.CreateUserReq
 
-	if !BindJson(c, &user) {
+	if !BindJson(c, &req) {
 		return
 	}
 
-	if err := h.Service.CreateUser(&user); err != nil {
+	user := &domain.User{
+		Username: req.Username,
+		Password: req.Password,
+	}
+
+	if err := h.Service.CreateUser(user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -31,10 +37,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 }
 
 func (h *UserHandler) Login(c *gin.Context) {
-	var req struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
+	var req dto.LoginReq
 
 	if !BindJson(c, &req) {
 		return
@@ -46,5 +49,9 @@ func (h *UserHandler) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": user.ID, "username": user.Username})
+	resp := dto.LoginResp{
+		ID:       user.ID,
+		Username: user.Username,
+	}
+	c.JSON(http.StatusOK, resp)
 }
