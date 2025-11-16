@@ -1,0 +1,17 @@
+services:
+  db:
+    container_name: db
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: blog-feed-notifier-db
+      MYSQL_ROOT_PASSWORD: rootpw
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pw
+    ports:
+      - "3309:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+
+  db-data:
