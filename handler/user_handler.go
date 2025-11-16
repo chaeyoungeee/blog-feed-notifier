@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/chaeyoungeee/blog-feed-notifier/domain"
@@ -56,4 +57,27 @@ func (h *UserHandler) Login(c *gin.Context) {
 		Nickname: user.Nickname,
 	}
 	c.JSON(http.StatusOK, resp)
+}
+
+func (h *UserHandler) SetDiscordWebhook(c *gin.Context) {
+	userIDStr := c.Param("user_id")
+	var userID uint
+	_, err := fmt.Sscanf(userIDStr, "%d", &userID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 유저 ID입니다"})
+		return
+	}
+
+	var req dto.SetDiscordWebhookReq
+
+	if !BindJson(c, &req) {
+		return
+	}
+
+	err = h.Service.SetDiscordWebhook(userID, req.DiscordWebhookURL)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.Status(http.StatusOK)
 }

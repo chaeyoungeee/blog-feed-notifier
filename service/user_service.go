@@ -42,3 +42,7 @@ func (s *UserService) Login(username, password string) (*domain.User, error) {
 
 	return user, nil
 }
+
+func (s *UserService) SetDiscordWebhook(userID uint, webhookURL string) error {
+	return s.Repo.UpdateDiscordWebhook(userID, webhookURL)
+}

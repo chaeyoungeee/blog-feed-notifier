@@ -31,6 +31,7 @@ func NewRouter(db *gorm.DB) *gin.Engine {
 		api.GET("/blogs", blogHandler.GetBlogs)
 		api.GET("/users/:user_id/subscriptions", subscriptionHandler.GetUserSubscriptions)
 		api.POST("/users/:user_id/subscriptions", subscriptionHandler.CreateSubscription)
+		api.POST("/users/:user_id/discord-webhook", userHandler.SetDiscordWebhook)
 	}
 
 	return router

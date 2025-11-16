@@ -39,3 +39,7 @@ func (r *UserRepo) ExistsByUsername(username string) (bool, error) {
 	}
 	return count > 0, nil
 }
+
+func (r *UserRepo) UpdateDiscordWebhook(userID uint, webhookURL string) error {
+	return r.DB.Model(&domain.User{}).Where("id = ?", userID).Update("discord_webhook_url", webhookURL).Error
+}

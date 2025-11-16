@@ -16,3 +16,7 @@ type LoginResp struct {
 	Username string `json:"username"`
 	Nickname string `json:"nickname"`
 }
+
+type SetDiscordWebhookReq struct {
+	DiscordWebhookURL string `json:"discord_webhook_url" binding:"required,url"`
+}
