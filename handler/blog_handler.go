@@ -17,7 +17,7 @@ func NewBlogHandler(s *service.BlogService) *BlogHandler {
 }
 
 func (h *BlogHandler) GetBlogs(c *gin.Context) {
-	blogs, err := h.Service.GetAllBlogs()
+	blogs, err := h.Service.GetBlogs()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

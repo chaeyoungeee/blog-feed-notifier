@@ -13,6 +13,6 @@ func NewBlogService(repo *repository.BlogRepo) *BlogService {
 	return &BlogService{Repo: repo}
 }
 
-func (s *BlogService) GetAllBlogs() ([]domain.Blog, error) {
+func (s *BlogService) GetBlogs() ([]*domain.Blog, error) {
 	return s.Repo.GetAll()
 }
