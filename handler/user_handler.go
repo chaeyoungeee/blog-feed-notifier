@@ -27,6 +27,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	user := &domain.User{
 		Username: req.Username,
 		Password: req.Password,
+		Nickname: req.Nickname,
 	}
 
 	if err := h.Service.CreateUser(user); err != nil {
@@ -52,6 +53,7 @@ func (h *UserHandler) Login(c *gin.Context) {
 	resp := dto.LoginResp{
 		ID:       user.ID,
 		Username: user.Username,
+		Nickname: user.Nickname,
 	}
 	c.JSON(http.StatusOK, resp)
 }
