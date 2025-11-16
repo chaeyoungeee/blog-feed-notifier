@@ -30,6 +30,7 @@ func NewRouter(db *gorm.DB) *gin.Engine {
 		api.POST("/auth/login", userHandler.Login)
 		api.GET("/blogs", blogHandler.GetBlogs)
 		api.GET("/users/:user_id/subscriptions", subscriptionHandler.GetUserSubscriptions)
+		api.POST("/users/:user_id/subscriptions", subscriptionHandler.CreateSubscription)
 	}
 
 	return router

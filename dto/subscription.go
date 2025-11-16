@@ -5,3 +5,7 @@ type GetSubscriptionResp struct {
 	BlogID   uint   `json:"blog_id"`
 	BlogName string `json:"blog_name"`
 }
+
+type CreateSubscriptionReq struct {
+	BlogID uint `json:"blog_id" binding:"required"`
+}

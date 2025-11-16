@@ -16,3 +16,7 @@ func NewSubscriptionService(repo *repository.SubscriptionRepo) *SubscriptionServ
 func (s *SubscriptionService) GetUserSubscriptions(userID uint) ([]*domain.Subscription, error) {
 	return s.Repo.GetAllByUserID(userID)
 }
+
+func (s *SubscriptionService) CreateSubscription(subscription *domain.Subscription) error {
+	return s.Repo.Create(subscription)
+}
