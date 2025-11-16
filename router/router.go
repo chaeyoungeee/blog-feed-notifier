@@ -16,8 +16,11 @@ func NewRouter(db *gorm.DB) *gin.Engine {
 	userService := service.NewUserService(userRepo)
 	userHandler := handler.NewUserHandler(userService)
 
-	router.POST("/users", userHandler.CreateUser)
-	router.POST("/login", userHandler.Login)
+	api := router.Group("/api/v1")
+	{
+		api.POST("/users", userHandler.CreateUser)
+		api.POST("/auth/login", userHandler.Login)
+	}
 
 	return router
 }
