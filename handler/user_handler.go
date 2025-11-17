@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/chaeyoungeee/blog-feed-notifier/domain"
@@ -20,8 +19,7 @@ func NewUserHandler(s *service.UserService) *UserHandler {
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
 	var req dto.CreateUserReq
-
-	if !BindJson(c, &req) {
+	if !BindJSON(c, &req) {
 		return
 	}
 
@@ -40,8 +38,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 
 func (h *UserHandler) Login(c *gin.Context) {
 	var req dto.LoginReq
-
-	if !BindJson(c, &req) {
+	if !BindJSON(c, &req) {
 		return
 	}
 
@@ -60,21 +57,18 @@ func (h *UserHandler) Login(c *gin.Context) {
 }
 
 func (h *UserHandler) SetDiscordWebhook(c *gin.Context) {
-	userIDStr := c.Param("user_id")
-	var userID uint
-	_, err := fmt.Sscanf(userIDStr, "%d", &userID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 유저 ID입니다"})
+	userID, ok := ParseUserID(c)
+	if !ok {
 		return
 	}
 
 	var req dto.SetDiscordWebhookReq
 
-	if !BindJson(c, &req) {
+	if !BindJSON(c, &req) {
 		return
 	}
 
-	err = h.Service.SetDiscordWebhook(userID, req.DiscordWebhookURL)
+	err := h.Service.SetDiscordWebhook(userID, req.DiscordWebhookURL)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/chaeyoungeee/blog-feed-notifier/domain"
@@ -19,11 +18,8 @@ func NewSubscriptionHandler(s *service.SubscriptionService) *SubscriptionHandler
 }
 
 func (h *SubscriptionHandler) GetUserSubscriptions(c *gin.Context) {
-	userIDStr := c.Param("user_id")
-	var userID uint
-	_, err := fmt.Sscanf(userIDStr, "%d", &userID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 유저 ID입니다"})
+	userID, ok := ParseUserID(c)
+	if !ok {
 		return
 	}
 
@@ -45,17 +41,14 @@ func (h *SubscriptionHandler) GetUserSubscriptions(c *gin.Context) {
 }
 
 func (h *SubscriptionHandler) CreateSubscription(c *gin.Context) {
-	userIDStr := c.Param("user_id")
-	var userID uint
-	_, err := fmt.Sscanf(userIDStr, "%d", &userID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 유저 ID입니다"})
+	userID, ok := ParseUserID(c)
+	if !ok {
 		return
 	}
 
 	var req dto.CreateSubscriptionReq
 
-	if !BindJson(c, &req) {
+	if !BindJSON(c, &req) {
 		return
 	}
 
@@ -64,7 +57,7 @@ func (h *SubscriptionHandler) CreateSubscription(c *gin.Context) {
 		BlogID: req.BlogID,
 	}
 
-	err = h.Service.CreateSubscription(subscription)
+	err := h.Service.CreateSubscription(subscription)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
