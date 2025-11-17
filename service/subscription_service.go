@@ -2,6 +2,8 @@ package service
 
 import (
 	"github.com/chaeyoungeee/blog-feed-notifier/domain"
+	"github.com/chaeyoungeee/blog-feed-notifier/dto"
+	"github.com/chaeyoungeee/blog-feed-notifier/pkg/notification"
 	"github.com/chaeyoungeee/blog-feed-notifier/repository"
 )
 
@@ -19,4 +21,18 @@ func (s *SubscriptionService) GetUserSubscriptions(userID uint) ([]*domain.Subsc
 
 func (s *SubscriptionService) CreateSubscription(subscription *domain.Subscription) error {
 	return s.Repo.Create(subscription)
+}
+
+func (s *SubscriptionService) NotifySubscribers(blog *domain.Blog, items []*dto.FeedItem) error {
+	subscriptions, err := s.Repo.GetAllByBlogID(blog.ID)
+	if err != nil {
+		return err
+	}
+
+	payload := notification.ConvertFeedItemToWebhookPayload(items, blog)
+	for _, sub := range subscriptions {
+		notification.SendDiscordWebhook(sub.User.DiscordWebhookURL, payload)
+	}
+
+	return nil
 }

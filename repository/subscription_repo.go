@@ -31,3 +31,15 @@ func (r *SubscriptionRepo) GetAllByUserID(userID uint) ([]*domain.Subscription, 
 	}
 	return subscriptions, nil
 }
+
+func (r *SubscriptionRepo) GetAllByBlogID(blogID uint) ([]*domain.Subscription, error) {
+	var subscriptions []*domain.Subscription
+	err := r.DB.
+		Preload("User").
+		Where("blog_id = ?", blogID).
+		Find(&subscriptions).Error
+	if err != nil {
+		return nil, err
+	}
+	return subscriptions, nil
+}

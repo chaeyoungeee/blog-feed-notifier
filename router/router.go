@@ -4,25 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/chaeyoungeee/blog-feed-notifier/handler"
-	"github.com/chaeyoungeee/blog-feed-notifier/repository"
-	"github.com/chaeyoungeee/blog-feed-notifier/service"
-	"gorm.io/gorm"
 )
 
-func NewRouter(db *gorm.DB) *gin.Engine {
+func NewRouter(userHandler *handler.UserHandler, blogHandler *handler.BlogHandler, subscriptionHandler *handler.SubscriptionHandler) *gin.Engine {
 	router := gin.Default()
-
-	userRepo := repository.NewUserRepo(db)
-	userService := service.NewUserService(userRepo)
-	userHandler := handler.NewUserHandler(userService)
-
-	blogRepo := repository.NewBlogRepo(db)
-	blogService := service.NewBlogService(blogRepo)
-	blogHandler := handler.NewBlogHandler(blogService)
-
-	subscriptionRepo := repository.NewSubscriptionRepo(db)
-	subscriptionService := service.NewSubscriptionService(subscriptionRepo)
-	subscriptionHandler := handler.NewSubscriptionHandler(subscriptionService)
 
 	api := router.Group("/api/v1")
 	{

@@ -8,6 +8,7 @@ type Blog struct {
 	LastID    string    `gorm:"size:200" json:"last_id"`
 	MainURL   string    `gorm:"size:100;not null" json:"main_url"`
 	RSSURL    string    `gorm:"size:200;not null" json:"rss_url"`
+	IconURL   string    `gorm:"size:200" json:"icon_url"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
