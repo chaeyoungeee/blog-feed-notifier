@@ -16,3 +16,7 @@ func NewBlogService(repo *repository.BlogRepo) *BlogService {
 func (s *BlogService) GetBlogs() ([]*domain.Blog, error) {
 	return s.Repo.GetAll()
 }
+
+func (s *BlogService) UpdateLastID(blogID uint, lastID string) error {
+	return s.Repo.UpdateLastID(blogID, lastID)
+}
