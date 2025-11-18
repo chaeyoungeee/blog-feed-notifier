@@ -16,6 +16,7 @@ func NewRouter(userHandler *handler.UserHandler, blogHandler *handler.BlogHandle
 		api.GET("/blogs", blogHandler.GetBlogs)
 		api.GET("/users/:user_id/subscriptions", subscriptionHandler.GetUserSubscriptions)
 		api.POST("/users/:user_id/subscriptions", subscriptionHandler.CreateSubscription)
+		api.DELETE("/users/:user_id/subscriptions/:subscription_id", subscriptionHandler.DeleteSubscription)
 		api.POST("/users/:user_id/discord-webhook", userHandler.SetDiscordWebhook)
 		api.POST("/users/:user_id/subscriptions/batch", subscriptionHandler.CreateSubscriptions)
 	}

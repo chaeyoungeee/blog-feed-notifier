@@ -19,3 +19,14 @@ func ParseUserID(c *gin.Context) (uint, bool) {
 	}
 	return userID, true
 }
+
+func ParseSubscriptionID(c *gin.Context) (uint, bool) {
+	subscriptionIDStr := c.Param("subscription_id")
+	var subscriptionID uint
+	_, err := fmt.Sscanf(subscriptionIDStr, "%d", &subscriptionID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 구독 ID입니다"})
+		return 0, false
+	}
+	return subscriptionID, true
+}

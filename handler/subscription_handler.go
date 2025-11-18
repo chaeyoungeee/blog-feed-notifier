@@ -93,3 +93,23 @@ func (h *SubscriptionHandler) CreateSubscriptions(c *gin.Context) {
 
 	c.Status(http.StatusCreated)
 }
+
+func (h *SubscriptionHandler) DeleteSubscription(c *gin.Context) {
+	userID, ok := ParseUserID(c)
+	if !ok {
+		return
+	}
+
+	subscritpionID, ok := ParseSubscriptionID(c)
+	if !ok {
+		return
+	}
+
+	err := h.Service.DeleteSubscription(userID, subscritpionID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
