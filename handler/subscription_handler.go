@@ -65,3 +65,31 @@ func (h *SubscriptionHandler) CreateSubscription(c *gin.Context) {
 
 	c.Status(http.StatusCreated)
 }
+
+func (h *SubscriptionHandler) CreateSubscriptions(c *gin.Context) {
+	userID, ok := ParseUserID(c)
+	if !ok {
+		return
+	}
+
+	var req dto.CreateSubscriptionsReq
+	if !BindJSON(c, &req) {
+		return
+	}
+
+	subscriptions := make([]*domain.Subscription, len(req.BlogIDs))
+	for i, blogID := range req.BlogIDs {
+		subscriptions[i] = &domain.Subscription{
+			UserID: userID,
+			BlogID: blogID,
+		}
+	}
+
+	err := h.Service.CreateSubscriptions(userID, subscriptions)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Status(http.StatusCreated)
+}

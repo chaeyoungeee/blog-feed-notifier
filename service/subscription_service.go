@@ -23,6 +23,9 @@ func (s *SubscriptionService) CreateSubscription(subscription *domain.Subscripti
 	return s.Repo.Create(subscription)
 }
 
+func (s *SubscriptionService) CreateSubscriptions(userID uint, subscriptions []*domain.Subscription) error {
+	return s.Repo.CreateBatch(subscriptions)
+}
 func (s *SubscriptionService) NotifySubscribers(blog *domain.Blog, items []*dto.FeedItem) error {
 	subscriptions, err := s.Repo.GetAllByBlogID(blog.ID)
 	if err != nil {

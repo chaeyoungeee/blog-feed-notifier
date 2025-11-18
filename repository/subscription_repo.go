@@ -2,6 +2,7 @@ package repository
 
 import (
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 
 	"github.com/chaeyoungeee/blog-feed-notifier/domain"
 )
@@ -20,6 +21,9 @@ func (r *SubscriptionRepo) Create(subscription *domain.Subscription) error {
 	return r.DB.Create(subscription).Error
 }
 
+func (r *SubscriptionRepo) CreateBatch(subscriptions []*domain.Subscription) error {
+	return r.DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&subscriptions).Error
+}
 func (r *SubscriptionRepo) GetAllByUserID(userID uint) ([]*domain.Subscription, error) {
 	var subscriptions []*domain.Subscription
 	err := r.DB.
