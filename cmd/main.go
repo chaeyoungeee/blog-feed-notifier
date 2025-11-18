@@ -10,9 +10,12 @@ import (
 	"github.com/chaeyoungeee/blog-feed-notifier/router"
 	"github.com/chaeyoungeee/blog-feed-notifier/scheduler"
 	"github.com/chaeyoungeee/blog-feed-notifier/service"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	godotenv.Load()
+
 	db, err := config.InitDB()
 	if err != nil {
 		log.Fatal(err)
