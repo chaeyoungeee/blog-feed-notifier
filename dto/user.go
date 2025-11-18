@@ -1,9 +1,9 @@
 package dto
 
 type CreateUserReq struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Nickname string `json:"nickname" binding:"required"`
+	Username          string `json:"username" binding:"required"`
+	Password          string `json:"password" binding:"required"`
+	DiscordWebhookURL string `json:"discord_webhook_url" binding:"omitempty,url"`
 }
 
 type LoginReq struct {
@@ -14,7 +14,6 @@ type LoginReq struct {
 type LoginResp struct {
 	ID       uint   `json:"id"`
 	Username string `json:"username"`
-	Nickname string `json:"nickname"`
 }
 
 type SetDiscordWebhookReq struct {

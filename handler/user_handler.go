@@ -24,16 +24,21 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	}
 
 	user := &domain.User{
-		Username: req.Username,
-		Password: req.Password,
-		Nickname: req.Nickname,
+		Username:          req.Username,
+		Password:          req.Password,
+		DiscordWebhookURL: req.DiscordWebhookURL,
 	}
 
 	if err := h.Service.CreateUser(user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.Status(http.StatusCreated)
+
+	resp := dto.LoginResp{
+		ID:       user.ID,
+		Username: user.Username,
+	}
+	c.JSON(http.StatusCreated, resp)
 }
 
 func (h *UserHandler) Login(c *gin.Context) {
@@ -51,7 +56,6 @@ func (h *UserHandler) Login(c *gin.Context) {
 	resp := dto.LoginResp{
 		ID:       user.ID,
 		Username: user.Username,
-		Nickname: user.Nickname,
 	}
 	c.JSON(http.StatusOK, resp)
 }
